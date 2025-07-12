@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       try {
-        const res = await fetch('/api/user/me', {
+        const res = await fetch('/api/users/me', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Not authenticated');

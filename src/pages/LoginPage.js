@@ -44,8 +44,8 @@ const LoginPage = () => {
       localStorage.setItem('token', data.token);
       // Update auth context
       login(data.user);
-      // Redirect to home
-      navigate('/');
+      // Redirect to dashboard
+      navigate('/dashboard');
     } catch (err) {
       setError('An error occurred. Please try again.');
     } finally {

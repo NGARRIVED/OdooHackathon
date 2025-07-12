@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Users, Star, Clock, User, ChevronDown, Zap, Target, Globe, Sparkles, Award, TrendingUp, Building2, Shield } from 'lucide-react';
 import UserProfileCard from '../components/UserProfileCard';
+import Pagination from '../components/Pagination';
 
 const HomePage = () => {
   const [users, setUsers] = useState([]);
@@ -19,12 +20,16 @@ const HomePage = () => {
       setIsLoading(true);
       setError('');
       try {
-        const res = await fetch('/api/user/public');
+        console.log('Fetching users from /api/users/public');
+        const res = await fetch('/api/users/public');
+        console.log('Response status:', res.status);
         if (!res.ok) throw new Error('Failed to fetch users');
         const data = await res.json();
+        console.log('Received data:', data);
         setUsers(data.users || []);
         setFilteredUsers(data.users || []);
       } catch (err) {
+        console.error('Error fetching users:', err);
         setError('Could not load users.');
       } finally {
         setIsLoading(false);
@@ -66,6 +71,14 @@ const HomePage = () => {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  
+  console.log('Debug state:', {
+    users: users.length,
+    filteredUsers: filteredUsers.length,
+    currentUsers: currentUsers.length,
+    isLoading,
+    error
+  });
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);

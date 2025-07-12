@@ -61,6 +61,17 @@ const Header = () => {
               {isLoggedIn && (
                 <>
                   <button
+                    onClick={() => handleNavigation('/dashboard')}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                      isActive('/dashboard') 
+                        ? 'bg-blue-600 text-white shadow-md' 
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
+                    }`}
+                  >
+                    <UserIcon className="w-4 h-4" />
+                    <span>Dashboard</span>
+                  </button>
+                  <button
                     onClick={() => handleNavigation('/profile')}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                       isActive('/profile') 
@@ -199,6 +210,16 @@ const Header = () => {
                       </div>
                       
                       <div className="py-2">
+                        <button
+                          onClick={() => {
+                            handleNavigation('/dashboard');
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          <UserIcon className="w-4 h-4" />
+                          <span>Dashboard</span>
+                        </button>
                         <button
                           onClick={() => {
                             handleNavigation('/profile');

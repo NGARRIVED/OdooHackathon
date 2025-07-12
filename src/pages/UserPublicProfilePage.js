@@ -14,7 +14,7 @@ const UserPublicProfilePage = () => {
       setError('');
       try {
         // Replace with your real API endpoint
-        const res = await fetch(`/api/user/${id}`);
+        const res = await fetch(`/api/users/${id}`);
         if (!res.ok) throw new Error('User not found');
         const data = await res.json();
         setUser(data);
