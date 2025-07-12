@@ -1,42 +1,99 @@
 import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { MagnifyingGlassIcon, HomeIcon, UserIcon, CogIcon, BellIcon } from '@heroicons/react/24/outline';
 
 const Header = () => {
-  const { isLoggedIn, login, logout } = useAuth();
+  const { isLoggedIn, user, login, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [availability, setAvailability] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
     console.log('Searching for:', searchQuery);
+    // Navigate to home page with search query
+    navigate('/', { state: { searchQuery } });
   };
 
   const handleLoginToggle = () => {
     if (isLoggedIn) {
       logout();
+      navigate('/');
     } else {
-      login();
+      navigate('/login');
     }
   };
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header className="bg-dark-800 border-b border-dark-600 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left side - Title and Home button */}
+        {/* Left side - Logo and Navigation */}
         <div className="flex items-center space-x-6">
-          <button className="text-gray-400 hover:text-white transition-colors">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-          </button>
-          <h1 className="text-2xl font-bold text-white">Skill Swap Platform</h1>
+          <Link to="/" className="flex items-center space-x-2 text-white hover:text-blue-400 transition-colors">
+            <HomeIcon className="w-6 h-6" />
+            <h1 className="text-xl font-bold">Skill Swap</h1>
+          </Link>
+          
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center space-x-4">
+            <Link
+              to="/"
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                isActive('/') 
+                  ? 'bg-blue-600 text-white' 
+                  : 'text-gray-300 hover:text-white hover:bg-dark-700'
+              }`}
+            >
+              Home
+            </Link>
+            {isLoggedIn && (
+              <>
+                <Link
+                  to="/profile"
+                  className={`px-3 py-2 rounded-lg transition-colors ${
+                    isActive('/profile') 
+                      ? 'bg-blue-600 text-white' 
+                      : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                  }`}
+                >
+                  Profile
+                </Link>
+                <Link
+                  to="/swap-requests"
+                  className={`px-3 py-2 rounded-lg transition-colors ${
+                    isActive('/swap-requests') 
+                      ? 'bg-blue-600 text-white' 
+                      : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                  }`}
+                >
+                  Requests
+                </Link>
+                {user?.isAdmin && (
+                  <Link
+                    to="/admin"
+                    className={`px-3 py-2 rounded-lg transition-colors ${
+                      isActive('/admin') 
+                        ? 'bg-red-600 text-white' 
+                        : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                    }`}
+                  >
+                    Admin
+                  </Link>
+                )}
+              </>
+            )}
+          </nav>
         </div>
 
-        {/* Center - Availability dropdown and search */}
+        {/* Center - Search and Filters */}
         <div className="flex items-center space-x-4 flex-1 max-w-md mx-8">
           <select
             value={availability}
             onChange={(e) => setAvailability(e.target.value)}
-            className="bg-dark-700 border border-dark-600 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-dark-700 border border-dark-600 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           >
             <option value="all">All Availability</option>
             <option value="available">Available</option>
@@ -50,30 +107,59 @@ const Header = () => {
               placeholder="Search skills or users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-dark-700 border border-dark-600 text-white rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              className="flex-1 bg-dark-700 border border-dark-600 text-white rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             />
             <button
               onClick={handleSearch}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-lg transition-colors"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <MagnifyingGlassIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Right side - Login button */}
-        <button
-          onClick={handleLoginToggle}
-          className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-            isLoggedIn
-              ? 'bg-red-600 hover:bg-red-700 text-white'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          }`}
-        >
-          {isLoggedIn ? 'Logout' : 'Login'}
-        </button>
+        {/* Right side - User Actions */}
+        <div className="flex items-center space-x-3">
+          {isLoggedIn ? (
+            <>
+              <button className="text-gray-400 hover:text-white transition-colors relative">
+                <BellIcon className="w-6 h-6" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  3
+                </span>
+              </button>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-semibold text-sm">
+                    {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLoginToggle}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Link
+                to="/login"
+                className="text-gray-300 hover:text-white transition-colors px-3 py-2"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

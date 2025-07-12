@@ -12,19 +12,28 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const login = () => {
+  const login = (userData) => {
     setIsLoggedIn(true);
+    setUser(userData);
   };
 
   const logout = () => {
     setIsLoggedIn(false);
+    setUser(null);
+  };
+
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData);
   };
 
   const value = {
     isLoggedIn,
+    user,
     login,
-    logout
+    logout,
+    updateUser
   };
 
   return (
