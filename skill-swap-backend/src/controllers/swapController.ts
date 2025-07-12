@@ -1,0 +1,70 @@
+import { Request, Response } from 'express';
+import SwapRequest from '../models/SwapRequest';
+
+export const createSwapRequest = async (req: Request, res: Response) => {
+  try {
+    const { toUser, offeredSkill, wantedSkill, message } = req.body;
+    const fromUser = (req.user as any)._id;
+    const swap = await SwapRequest.create({ fromUser, toUser, offeredSkill, wantedSkill, message });
+    res.status(201).json(swap);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err });
+  }
+};
+
+export const getMySwapRequests = async (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as any)._id;
+    const sent = await SwapRequest.find({ fromUser: userId }).populate('toUser', 'name email profilePhoto');
+    const received = await SwapRequest.find({ toUser: userId }).populate('fromUser', 'name email profilePhoto');
+    res.json({ sent, received });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err });
+  }
+};
+
+export const getMySwapRequestsPaginated = async (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as any)._id;
+    const { page = 1, limit = 10, status } = req.query;
+    const sentQuery: any = { fromUser: userId };
+    const receivedQuery: any = { toUser: userId };
+    if (status) {
+      sentQuery.status = status;
+      receivedQuery.status = status;
+    }
+    const sent = await SwapRequest.find(sentQuery)
+      .populate('toUser', 'name email profilePhoto')
+      .skip((+page - 1) * +limit)
+      .limit(+limit);
+    const received = await SwapRequest.find(receivedQuery)
+      .populate('fromUser', 'name email profilePhoto')
+      .skip((+page - 1) * +limit)
+      .limit(+limit);
+    const sentTotal = await SwapRequest.countDocuments(sentQuery);
+    const receivedTotal = await SwapRequest.countDocuments(receivedQuery);
+    res.json({
+      sent, sentTotal, sentPages: Math.ceil(sentTotal / +limit),
+      received, receivedTotal, receivedPages: Math.ceil(receivedTotal / +limit),
+      page: +page, limit: +limit
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err });
+  }
+};
+
+export const updateSwapStatus = async (req: Request, res: Response) => {
+  try {
+    const { status } = req.body; // 'accepted' or 'rejected'
+    const userId = (req.user as any)._id;
+    const swap = await SwapRequest.findOneAndUpdate(
+      { _id: req.params.id, toUser: userId },
+      { status },
+      { new: true }
+    );
+    if (!swap) return res.status(404).json({ message: 'Swap request not found' });
+    res.json(swap);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err });
+  }
+}; 
