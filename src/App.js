@@ -10,6 +10,8 @@ import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
 import SwapRequestsPage from './pages/SwapRequestsPage';
 import UserPublicProfilePage from './pages/UserPublicProfilePage';
+import NotificationsPage from './pages/NotificationsPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/swap-requests" element={<SwapRequestsPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/auth/callback" element={<AuthCallbackPage />} />
               <Route path="/user/:id" element={<UserPublicProfilePage />} />
             </Routes>
           </main>

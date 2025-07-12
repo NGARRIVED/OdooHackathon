@@ -33,12 +33,22 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// Placeholder for OAuth callback handlers
+// OAuth callback handler
 export const oauthCallback = async (req: Request, res: Response) => {
-  // On success, issue JWT and redirect or respond
-  // req.user will be set by Passport
-  const user = req.user;
-  const token = jwt.sign({ id: (user as any)._id }, JWT_SECRET, { expiresIn: '7d' });
-  // For now, just return token and user
-  res.json({ token, user });
+  try {
+    // req.user will be set by Passport
+    const user = req.user as any;
+    if (!user) {
+      return res.redirect('/login?error=Authentication failed');
+    }
+    
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    
+    // Redirect to frontend with token
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3006';
+    res.redirect(`${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+  } catch (error) {
+    console.error('OAuth callback error:', error);
+    res.redirect('/login?error=Authentication failed');
+  }
 }; 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { MagnifyingGlassIcon, HomeIcon, UserIcon, CogIcon, BellIcon, UsersIcon, ShieldCheckIcon, ChevronDownIcon, BuildingOffice2Icon, ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, HomeIcon, UserIcon, CogIcon, UsersIcon, ShieldCheckIcon, ChevronDownIcon, BuildingOffice2Icon, ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationDropdown from './NotificationDropdown';
 
 const Header = () => {
   const { isLoggedIn, user, logout } = useAuth();
@@ -155,14 +156,7 @@ const Header = () => {
             {isLoggedIn ? (
               <>
                 {/* Notifications */}
-                <div className="relative">
-                  <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-300 relative">
-                    <BellIcon className="w-5 h-5" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                      3
-                    </span>
-                  </button>
-                </div>
+                <NotificationDropdown />
 
                 {/* User Menu */}
                 <div className="relative">

@@ -10,6 +10,7 @@ import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import swapRoutes from './routes/swap';
 import ratingRoutes from './routes/rating';
+import notificationRoutes from './routes/notification';
 import errorHandler from './middlewares/errorHandler';
 import connectDB from './config/db';
 import swaggerUi = require('swagger-ui-express');
@@ -25,13 +26,14 @@ app.use(cors());
 app.use(express.json());
 app.use(helmet.default());
 app.use(rateLimit.default({ windowMs: 15 * 60 * 1000, max: 100 }));
-app.use(xss.default());
+app.use(xss());
 app.use(mongoSanitize());
 app.use(passport.initialize());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/swaps', swapRoutes);
 app.use('/api/ratings', ratingRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use(errorHandler);
 app.use('/uploads', express.static('uploads'));
 
@@ -57,6 +59,19 @@ connectDB();
 
 app.get('/', (req, res) => {
   res.send('Skill Swap Platform API is running!');
+});
+
+// Test endpoint to check OAuth configuration
+app.get('/api/test-oauth', (req, res) => {
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+  const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  
+  res.json({
+    message: 'OAuth Configuration Test',
+    googleClientId: googleClientId ? 'Configured' : 'Missing',
+    googleClientSecret: googleClientSecret ? 'Configured' : 'Missing',
+    hasGoogleConfig: !!(googleClientId && googleClientSecret)
+  });
 });
 
 app.listen(PORT, () => {
