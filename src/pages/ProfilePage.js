@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import UserProfileCard from '../components/UserProfileCard';
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuth();
@@ -93,173 +94,85 @@ const ProfilePage = () => {
         </div>
 
         {/* Profile Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Basic Info */}
+        {!isEditing ? (
+          <UserProfileCard user={user} />
+        ) : (
           <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Profile Picture
-              </label>
-              <div className="flex items-center space-x-4">
-                <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-xl">
-                    {user.name?.split(' ').map(n => n[0]).join('')}
-                  </span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-500 text-sm">
-                  Change Photo
-                </button>
-              </div>
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Full Name
               </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="name"
-                  value={editData.name}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              ) : (
-                <p className="text-white">{user.name}</p>
-              )}
+              <input
+                type="text"
+                name="name"
+                value={editData.name}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Email
               </label>
               <p className="text-white">{user.email}</p>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Location
               </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="location"
-                  value={editData.location}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="City, Country"
-                />
-              ) : (
-                <p className="text-white">{user.location || 'Not specified'}</p>
-              )}
+              <input
+                type="text"
+                name="location"
+                value={editData.location}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="City, Country"
+              />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Availability
               </label>
-              {isEditing ? (
-                <select
-                  name="availability"
-                  value={editData.availability}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="weekends">Weekends</option>
-                  <option value="evenings">Evenings</option>
-                  <option value="weekdays">Weekdays</option>
-                  <option value="flexible">Flexible</option>
-                </select>
-              ) : (
-                <p className="text-white capitalize">{user.availability}</p>
-              )}
+              <select
+                name="availability"
+                value={editData.availability}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="weekends">Weekends</option>
+                <option value="evenings">Evenings</option>
+                <option value="weekdays">Weekdays</option>
+                <option value="flexible">Flexible</option>
+              </select>
             </div>
-          </div>
-
-          {/* Skills */}
-          <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Skills You Can Offer
               </label>
-              {isEditing ? (
-                <textarea
-                  name="skillsOffered"
-                  value={editData.skillsOffered}
-                  onChange={handleChange}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter skills separated by commas"
-                />
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {user.skillsOffered?.length > 0 ? (
-                    user.skillsOffered.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="bg-green-600 text-white text-sm px-3 py-1 rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))
-                  ) : (
-                    <p className="text-gray-400">No skills added yet</p>
-                  )}
-                </div>
-              )}
+              <textarea
+                name="skillsOffered"
+                value={editData.skillsOffered}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter skills separated by commas"
+              />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Skills You Want to Learn
               </label>
-              {isEditing ? (
-                <textarea
-                  name="skillsWanted"
-                  value={editData.skillsWanted}
-                  onChange={handleChange}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter skills separated by commas"
-                />
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {user.skillsWanted?.length > 0 ? (
-                    user.skillsWanted.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))
-                  ) : (
-                    <p className="text-gray-400">No skills added yet</p>
-                  )}
-                </div>
-              )}
+              <textarea
+                name="skillsWanted"
+                value={editData.skillsWanted}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-dark-600 text-white bg-dark-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter skills separated by commas"
+              />
             </div>
           </div>
-        </div>
-
-        {/* Stats */}
-        <div className="mt-8 pt-8 border-t border-dark-600">
-          <h3 className="text-lg font-semibold text-white mb-4">Your Activity</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-dark-700 rounded-lg p-4">
-              <div className="text-2xl font-bold text-blue-400">12</div>
-              <div className="text-gray-400 text-sm">Swap Requests Sent</div>
-            </div>
-            <div className="bg-dark-700 rounded-lg p-4">
-              <div className="text-2xl font-bold text-green-400">8</div>
-              <div className="text-gray-400 text-sm">Completed Swaps</div>
-            </div>
-            <div className="bg-dark-700 rounded-lg p-4">
-              <div className="text-2xl font-bold text-yellow-400">4.2</div>
-              <div className="text-gray-400 text-sm">Average Rating</div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

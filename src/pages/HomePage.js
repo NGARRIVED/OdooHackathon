@@ -1,319 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Users, Star, Clock, User, ChevronDown, Zap, Target, Globe, Sparkles, Award, TrendingUp, Building2, Shield } from 'lucide-react';
-
-// Mock data since we don't have access to the original
-const mockUsers = [
-  {
-    id: 1,
-    name: "Sarah Chen",
-    skillsOffered: ["React", "JavaScript", "UI/UX Design"],
-    skillsWanted: ["Python", "Machine Learning"],
-    rating: 4.8,
-    title: "Senior Frontend Developer",
-    company: "TechCorp",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    id: 2,
-    name: "Marcus Thompson",
-    skillsOffered: ["Python", "Data Science", "SQL"],
-    skillsWanted: ["React", "Frontend Development"],
-    rating: 4.9,
-    title: "Data Scientist",
-    company: "DataFlow Inc",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    id: 3,
-    name: "Emily Rodriguez",
-    skillsOffered: ["Graphic Design", "Adobe Creative Suite"],
-    skillsWanted: ["Web Development", "CSS"],
-    rating: 4.7,
-    title: "Creative Director",
-    company: "Design Studio",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    id: 4,
-    name: "David Kim",
-    skillsOffered: ["Node.js", "Backend Development"],
-    skillsWanted: ["DevOps", "AWS"],
-    rating: 4.6,
-    title: "Backend Engineer",
-    company: "CloudTech",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    id: 5,
-    name: "Lisa Wang",
-    skillsOffered: ["Machine Learning", "TensorFlow"],
-    skillsWanted: ["Mobile Development", "React Native"],
-    rating: 4.8,
-    title: "ML Engineer",
-    company: "AI Solutions",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    id: 6,
-    name: "Alex Johnson",
-    skillsOffered: ["Digital Marketing", "SEO"],
-    skillsWanted: ["Analytics", "Data Visualization"],
-    rating: 4.5,
-    title: "Marketing Manager",
-    company: "Growth Labs",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
-  }
-];
-
-const UserCard = ({ user }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  return (
-    <div 
-      className={`relative group overflow-hidden rounded-xl backdrop-blur-sm border transition-all duration-500 transform ${
-        isHovered ? 'scale-102' : 'scale-100'
-      }`}
-      style={{
-        backgroundColor: '#ffffff',
-        borderColor: '#e5e7eb',
-        boxShadow: isHovered 
-          ? '0 20px 40px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(59, 130, 246, 0.1)' 
-          : '0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(229, 231, 235, 0.6)'
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Professional gradient overlay on hover */}
-      <div 
-        className={`absolute inset-0 transition-opacity duration-500 ${
-          isHovered ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{
-          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(37, 99, 235, 0.02) 100%)'
-        }}
-      />
-      
-      {/* Professional border accent */}
-      <div className={`absolute top-0 left-0 right-0 h-1 transition-all duration-500 ${
-        isHovered ? 'opacity-100' : 'opacity-0'
-      }`} style={{ backgroundColor: '#3b82f6' }} />
-      
-      <div className="relative p-6">
-        {/* Header with avatar and status */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <img 
-                src={user.avatar} 
-                alt={user.name}
-                className="w-14 h-14 rounded-full object-cover border-2 transition-all duration-300"
-                style={{
-                  borderColor: isHovered ? '#3b82f6' : '#e5e7eb'
-                }}
-              />
-              {/* Professional status indicator */}
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white flex items-center justify-center"
-                   style={{ backgroundColor: '#10b981' }}>
-                <div className="w-2 h-2 bg-white rounded-full" />
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-1 text-gray-900">
-                {user.name}
-              </h3>
-              <p className="text-sm text-gray-600 mb-2">{user.title}</p>
-              <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <Building2 className="w-3 h-3" />
-                <span>{user.company}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-right">
-            <div className="flex items-center space-x-1 mb-1">
-              <Star className="w-4 h-4 text-amber-500 fill-current" />
-              <span className="text-sm font-medium text-gray-900">{user.rating}</span>
-            </div>
-            <Shield className="w-4 h-4 text-blue-600 mx-auto" />
-          </div>
-        </div>
-        
-        {/* Skills sections */}
-        <div className="space-y-5 mb-6">
-          {/* Expertise */}
-          <div>
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="p-1.5 rounded-md bg-blue-50">
-                <Zap className="w-3.5 h-3.5 text-blue-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-900">Expertise</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {user.skillsOffered.map((skill, index) => (
-                <span 
-                  key={index}
-                  className="px-3 py-1.5 text-xs font-medium rounded-full bg-blue-50 text-blue-700 border border-blue-100 transition-all duration-300 hover:bg-blue-100"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-          
-          {/* Learning interests */}
-          <div>
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="p-1.5 rounded-md bg-green-50">
-                <Target className="w-3.5 h-3.5 text-green-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-900">Learning</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {user.skillsWanted.map((skill, index) => (
-                <span 
-                  key={index}
-                  className="px-3 py-1.5 text-xs font-medium rounded-full bg-green-50 text-green-700 border border-green-100 transition-all duration-300 hover:bg-green-100"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Professional action button */}
-        <button 
-          className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-900 text-white hover:bg-gray-800 shadow-sm"
-        >
-          <div className="flex items-center justify-center space-x-2">
-            <Users className="w-4 h-4" />
-            <span>Connect</span>
-          </div>
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const pages = [];
-  const maxVisiblePages = 5;
-  
-  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-  
-  if (endPage - startPage + 1 < maxVisiblePages) {
-    startPage = Math.max(1, endPage - maxVisiblePages + 1);
-  }
-  
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
-  
-  return (
-    <div className="flex justify-center items-center space-x-2">
-      {startPage > 1 && (
-        <>
-          <button
-            onClick={() => onPageChange(1)}
-            className="px-4 py-2 rounded-lg font-medium transition-all duration-300 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400"
-          >
-            1
-          </button>
-          {startPage > 2 && <span className="text-gray-400">...</span>}
-        </>
-      )}
-      
-      {pages.map(page => (
-        <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
-            currentPage === page 
-              ? 'bg-blue-600 text-white shadow-md' 
-              : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400'
-          }`}
-        >
-          {page}
-        </button>
-      ))}
-      
-      {endPage < totalPages && (
-        <>
-          {endPage < totalPages - 1 && <span className="text-gray-400">...</span>}
-          <button
-            onClick={() => onPageChange(totalPages)}
-            className="px-4 py-2 rounded-lg font-medium transition-all duration-300 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400"
-          >
-            {totalPages}
-          </button>
-        </>
-      )}
-    </div>
-  );
-};
+import UserProfileCard from '../components/UserProfileCard';
 
 const HomePage = () => {
-  const [users, setUsers] = useState(mockUsers);
-  const [filteredUsers, setFilteredUsers] = useState(mockUsers);
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [availabilityFilter, setAvailabilityFilter] = useState('all');
   const [sortBy, setSortBy] = useState('default');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const usersPerPage = 6;
+
+  // Fetch users from backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setIsLoading(true);
+      setError('');
+      try {
+        const res = await fetch('/api/user/public');
+        if (!res.ok) throw new Error('Failed to fetch users');
+        const data = await res.json();
+        setUsers(data.users || []);
+        setFilteredUsers(data.users || []);
+      } catch (err) {
+        setError('Could not load users.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   // Filter users based on search and availability
   useEffect(() => {
-    setIsLoading(true);
-    
-    setTimeout(() => {
-      let filtered = users;
-
-      // Filter by search query
-      if (searchQuery) {
-        filtered = filtered.filter(user => 
-          user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.skillsOffered.some(skill => 
-            skill.toLowerCase().includes(searchQuery.toLowerCase())
-          ) ||
-          user.skillsWanted.some(skill => 
-            skill.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        );
-      }
-
-      // Filter by availability
-      if (availabilityFilter !== 'all') {
-        filtered = filtered.filter(user => {
-          const availabilityMap = {
-            'available': [1, 2, 3],
-            'busy': [4, 5],
-            'away': [6]
-          };
-          return availabilityMap[availabilityFilter]?.includes(user.id) || false;
-        });
-      }
-
-      // Sort users
-      if (sortBy !== 'default') {
-        filtered = [...filtered].sort((a, b) => {
-          switch (sortBy) {
-            case 'rating':
-              return b.rating - a.rating;
-            case 'name':
-              return a.name.localeCompare(b.name);
-            default:
-              return 0;
-          }
-        });
-      }
-
-      setFilteredUsers(filtered);
-      setCurrentPage(1);
-      setIsLoading(false);
-    }, 300);
+    let filtered = users;
+    if (searchQuery) {
+      filtered = filtered.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.skillsOffered && user.skillsOffered.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+        (user.skillsWanted && user.skillsWanted.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())))
+      );
+    }
+    if (availabilityFilter !== 'all') {
+      filtered = filtered.filter(user => user.availability === availabilityFilter);
+    }
+    if (sortBy !== 'default') {
+      filtered = [...filtered].sort((a, b) => {
+        switch (sortBy) {
+          case 'rating':
+            return (b.rating || 0) - (a.rating || 0);
+          case 'name':
+            return a.name.localeCompare(b.name);
+          default:
+            return 0;
+        }
+      });
+    }
+    setFilteredUsers(filtered);
+    setCurrentPage(1);
   }, [users, searchQuery, availabilityFilter, sortBy]);
 
   // Get current users for pagination
@@ -452,19 +198,14 @@ const HomePage = () => {
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent" />
           </div>
+        ) : error ? (
+          <div className="text-center text-red-500 py-20 text-lg">{error}</div>
         ) : currentUsers.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {currentUsers.map((user, index) => (
-                <div 
-                  key={user.id}
-                  className="opacity-0 animate-fade-in-up"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                    animationFillMode: 'forwards'
-                  }}
-                >
-                  <UserCard user={user} />
+                <div key={user._id || user.id} className="opacity-0 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards' }}>
+                  <UserProfileCard user={user} />
                 </div>
               ))}
             </div>

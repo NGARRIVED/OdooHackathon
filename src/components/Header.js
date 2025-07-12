@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
 import { MagnifyingGlassIcon, HomeIcon, UserIcon, CogIcon, BellIcon, UsersIcon, ShieldCheckIcon, ChevronDownIcon, BuildingOffice2Icon, ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
-  // Mock auth state for demonstration
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [user, setUser] = useState({
-    name: "Sarah Chen",
-    title: "Senior Frontend Developer",
-    company: "TechCorp",
-    isAdmin: false
-  });
-  
+  const { isLoggedIn, user, logout } = useAuth();
   const [availability, setAvailability] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -24,14 +17,9 @@ const Header = () => {
     // In a real app, this would trigger search functionality
   };
 
-  const handleLoginToggle = () => {
-    setIsLoggedIn(!isLoggedIn);
-    setIsUserMenuOpen(false);
-  };
-
   const handleNavigation = (path) => {
     setCurrentPage(path);
-    console.log('Navigating to:', path);
+    navigate(path);
   };
 
   const isActive = (path) => currentPage === path;
@@ -235,7 +223,7 @@ const Header = () => {
                       
                       <div className="border-t border-gray-100 py-2">
                         <button
-                          onClick={handleLoginToggle}
+                          onClick={logout}
                           className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                         >
                           <ArrowRightOnRectangleIcon className="w-4 h-4" />

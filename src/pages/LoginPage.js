@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Users, Shield, Sparkles, Building2, Globe, Award } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,8 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,19 +27,25 @@ const LoginPage = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (formData.email === 'admin@example.com' && formData.password === 'admin123') {
-        // Simulate successful login
-        console.log('Admin login successful');
-      } else if (formData.email === 'user@example.com' && formData.password === 'user123') {
-        // Simulate successful login
-        console.log('User login successful');
-      } else {
-        setError('Invalid email or password. Try admin@example.com/admin123 or user@example.com/user123');
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message || 'Invalid email or password.');
+        setIsLoading(false);
+        return;
       }
+      const data = await res.json();
+      // Save token to localStorage
+      localStorage.setItem('token', data.token);
+      // Update auth context
+      login(data.user);
+      // Redirect to home
+      navigate('/');
     } catch (err) {
       setError('An error occurred. Please try again.');
     } finally {

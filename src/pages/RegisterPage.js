@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Users, Shield, Sparkles, Building2, Globe, Award, UserCheck, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const SignUpPage = () => {
+const RegisterPage = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,6 +19,7 @@ const SignUpPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -55,20 +57,35 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
     setIsLoading(true);
     setError('');
-
+    setSuccess('');
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulate successful registration
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.firstName + ' ' + formData.lastName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        setError('Server error: Could not parse response.');
+        setIsLoading(false);
+        return;
+      }
+      if (!res.ok) {
+        setError(data.message || 'Registration failed.');
+        setIsLoading(false);
+        return;
+      }
       setSuccess('Account created successfully! You can now sign in.');
-      console.log('Registration successful:', formData);
-      
-      // Reset form
+      setTimeout(() => navigate('/login'), 1500);
       setFormData({
         firstName: '',
         lastName: '',
@@ -80,7 +97,7 @@ const SignUpPage = () => {
         acceptTerms: false
       });
     } catch (err) {
-      setError('An error occurred during registration. Please try again.');
+      setError('Network error: Could not reach the server. Please check your connection or try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -396,4 +413,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default RegisterPage;
