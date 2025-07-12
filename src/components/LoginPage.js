@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { Eye, EyeOff, Users, Shield, Sparkles, Building2, Globe, Award } from 'lucide-react';
 
 const LoginPage = () => {
-  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (error) setError('');
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -26,159 +25,279 @@ const LoginPage = () => {
     setError('');
 
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Basic validation
-      if (!formData.email || !formData.password) {
-        setError('Please fill in all fields');
-        return;
+      if (formData.email === 'admin@example.com' && formData.password === 'admin123') {
+        // Simulate successful login
+        console.log('Admin login successful');
+      } else if (formData.email === 'user@example.com' && formData.password === 'user123') {
+        // Simulate successful login
+        console.log('User login successful');
+      } else {
+        setError('Invalid email or password. Try admin@example.com/admin123 or user@example.com/user123');
       }
-
-      // For demo purposes, accept any valid email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        setError('Please enter a valid email address');
-        return;
-      }
-
-      // Simulate successful login
-      console.log('Login successful:', formData);
-      login(); // This will update the auth context
-      
     } catch (err) {
-      setError('Login failed. Please try again.');
-      console.error('Login error:', err);
+      setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleHomeClick = () => {
-    console.log('Home button clicked');
-    // Navigate back to main app without logging in
-    window.location.reload();
-  };
-
-  const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
-    // Here you would typically navigate to forgot password page
-    alert('Forgot password functionality would be implemented here');
-  };
-
   return (
-    <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Skill Swap Platform</h1>
-          <button
-            onClick={handleHomeClick}
-            className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-          >
-            Home
-          </button>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+      {/* Professional background pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 opacity-60" />
+      <div className="absolute inset-0" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f3f4f6' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+      }} />
+      
+      <div className="relative w-full max-w-md">
+        {/* Professional Login Card */}
+        <div 
+          className={`relative overflow-hidden rounded-2xl backdrop-blur-sm border transition-all duration-500 transform ${
+            isHovered ? 'scale-102' : 'scale-100'
+          }`}
+          style={{
+            backgroundColor: '#ffffff',
+            borderColor: '#e5e7eb',
+            boxShadow: isHovered 
+              ? '0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(59, 130, 246, 0.1)' 
+              : '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(229, 231, 235, 0.6)'
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Professional gradient overlay */}
+          <div 
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              isHovered ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(37, 99, 235, 0.02) 100%)'
+            }}
+          />
+          
+          {/* Professional border accent */}
+          <div className={`absolute top-0 left-0 right-0 h-1 transition-all duration-500 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`} style={{ backgroundColor: '#3b82f6' }} />
+          
+          <div className="relative p-8">
+            {/* Professional Header */}
+            <div className="text-center mb-8">
+              <div className="relative inline-block mb-6">
+                <div className="relative p-4 rounded-2xl bg-white shadow-lg border border-gray-200">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl opacity-5" />
+                  <Shield className="w-12 h-12 text-blue-600 relative z-10" />
+                </div>
+              </div>
+              
+              <h1 className="text-3xl font-bold mb-3 text-gray-900">
+                Welcome Back
+              </h1>
+              <p className="text-gray-600 mb-6">
+                Sign in to your professional account
+              </p>
+              
+              {/* Professional trust indicators */}
+              <div className="flex items-center justify-center space-x-6 text-xs text-gray-500 mb-6">
+                <div className="flex items-center space-x-1">
+                  <Shield className="w-3 h-3 text-blue-600" />
+                  <span>Secure</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Users className="w-3 h-3 text-green-600" />
+                  <span>Trusted</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Award className="w-3 h-3 text-purple-600" />
+                  <span>Verified</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="relative p-4 rounded-xl border border-red-200 bg-red-50">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
+                      <div className="w-2 h-2 bg-white rounded-full" />
+                    </div>
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-5">
+                {/* Email Field */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
+                    Email address
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                {/* Password Field */}
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="current-password"
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 pr-12 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                      placeholder="Enter your password"
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Remember Me & Forgot Password */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors duration-200"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                    Remember me
+                  </label>
+                </div>
+                <div className="text-sm">
+                  <button
+                    type="button"
+                    className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              </div>
+
+              {/* Sign In Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-gray-900 text-white hover:bg-gray-800 shadow-lg"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                    <span>Signing in...</span>
+                  </div>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
+
+              {/* Divider */}
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500">Demo Accounts</span>
+                </div>
+              </div>
+
+              {/* Demo Account Info */}
+              <div className="space-y-3">
+                <div className="p-4 rounded-xl border border-gray-200 bg-gray-50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Administrator</p>
+                      <p className="text-xs text-gray-600">admin@example.com</p>
+                    </div>
+                    <div className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                      admin123
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-xl border border-gray-200 bg-gray-50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Demo User</p>
+                      <p className="text-xs text-gray-600">user@example.com</p>
+                    </div>
+                    <div className="px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
+                      user123
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sign Up Link */}
+              <div className="text-center pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600">
+                  Don't have an account?{' '}
+                  <button
+                    type="button"
+                    className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                  >
+                    Create one now
+                  </button>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-            {error}
-          </div>
-        )}
-
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Field */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              disabled={isLoading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-              placeholder="Enter your email"
-            />
-          </div>
-
-          {/* Password Field */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              disabled={isLoading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-              placeholder="Enter your password"
-            />
-          </div>
-
-          {/* Login Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:cursor-not-allowed flex items-center justify-center"
-          >
-            {isLoading ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Logging in...
-              </>
-            ) : (
-              'Login'
-            )}
-          </button>
-
-          {/* Forgot Password Link */}
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              disabled={isLoading}
-              className="text-blue-600 hover:text-blue-800 hover:underline text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Forgot username/password
-            </button>
-          </div>
-        </form>
-
-        {/* Additional Info */}
+        {/* Professional Footer */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <button 
-              disabled={isLoading}
-              className="text-blue-600 hover:text-blue-800 hover:underline font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Sign up
-            </button>
-          </p>
-        </div>
-
-        {/* Demo Info */}
-        <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-md">
-          <p className="text-xs text-blue-700">
-            <strong>Demo:</strong> Enter any valid email format (e.g., user@example.com) and any password to login.
-          </p>
+          <div className="flex items-center justify-center space-x-6 text-xs text-gray-500">
+            <div className="flex items-center space-x-1">
+              <Globe className="w-3 h-3" />
+              <span>Global Network</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Building2 className="w-3 h-3" />
+              <span>Enterprise Ready</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Sparkles className="w-3 h-3" />
+              <span>Premium Quality</span>
+            </div>
+          </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .scale-102 {
+          transform: scale(1.02);
+        }
+      `}</style>
     </div>
   );
 };
 
-export default LoginPage; 
+export default LoginPage;
