@@ -134,3 +134,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [⬆ Back to Top](#-skill-swap-platform)
 
 </div>
+
+## Team Uninova
+
+| Name            | Email                       |
+|-----------------|----------------------------|
+| Yash Yadav      | yash61304@gmail.com         |
+| Simran Tupe     | simran.manisha27@gmail.com  |
+| Ananya Sharma   | ananyasharma250506@gmail.com|
+| Tejas Wasnik    | tejaswasnik.me@gmail.com    |
