@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import UserProfileCard from '../components/UserProfileCard';
+import UserProfileDetail from '../components/UserProfileDetail';
 
 const UserPublicProfilePage = () => {
   const { id } = useParams();
@@ -28,13 +28,17 @@ const UserPublicProfilePage = () => {
   }, [id]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
       {loading ? (
-        <div className="text-gray-500 text-lg">Loading...</div>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-gray-500 text-lg">Loading...</div>
+        </div>
       ) : error ? (
-        <div className="text-red-500 text-lg">{error}</div>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-red-500 text-lg">{error}</div>
+        </div>
       ) : user ? (
-        <UserProfileCard user={user} />
+        <UserProfileDetail user={user} />
       ) : null}
     </div>
   );

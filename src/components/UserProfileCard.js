@@ -1,13 +1,30 @@
-import React from 'react';
-import { StarIcon, MapPinIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
+import { StarIcon, MapPinIcon, BriefcaseIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const UserProfileCard = ({ user }) => {
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
+  const [isHovered, setIsHovered] = useState(false);
+  
   // Fallback for avatar
   const initials = user.name
     ? user.name.split(' ').map(n => n[0]).join('').toUpperCase()
     : 'U';
+
+  const handleRequestClick = (e) => {
+    e.stopPropagation();
+    if (!currentUser) {
+      // Redirect to login if not authenticated
+      window.location.href = '/login';
+      return;
+    }
+    // Navigate to the detailed profile page where they can send a request
+    navigate(`/user/${user._id || user.id}`);
+  };
+
+  const isOwnProfile = currentUser && (currentUser._id === user._id || currentUser.id === user.id);
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg border border-gray-200 p-8 flex flex-col items-center space-y-6">
@@ -94,15 +111,24 @@ const UserProfileCard = ({ user }) => {
           <span className="text-gray-400 text-xs">({user.numRatings || 0} ratings)</span>
         </div>
       )}
-      {/* View Profile Button */}
-      {user.id && (
+      {/* Action Buttons */}
+      <div className="flex space-x-3 w-full">
         <button
-          onClick={() => navigate(`/user/${user.id}`)}
-          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+          onClick={() => navigate(`/user/${user._id || user.id}`)}
+          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
         >
           View Profile
         </button>
-      )}
+        {!isOwnProfile && (
+          <button
+            onClick={handleRequestClick}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            <ChatBubbleLeftRightIcon className="w-4 h-4 inline mr-1" />
+            Request
+          </button>
+        )}
+      </div>
     </div>
   );
 };
