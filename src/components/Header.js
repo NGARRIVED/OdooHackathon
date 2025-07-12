@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const Header = () => {
+const Header = ({ onNavigate }) => {
   const { isLoggedIn, login, logout } = useAuth();
   const [availability, setAvailability] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -63,17 +63,27 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Right side - Login button */}
-        <button
-          onClick={handleLoginToggle}
-          className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-            isLoggedIn
-              ? 'bg-red-600 hover:bg-red-700 text-white'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          }`}
-        >
-          {isLoggedIn ? 'Logout' : 'Login'}
-        </button>
+        {/* Right side - Profile and Login/Logout buttons */}
+        <div className="flex items-center space-x-4">
+          {isLoggedIn && (
+            <button
+              onClick={() => onNavigate && onNavigate('profile')}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Profile
+            </button>
+          )}
+          <button
+            onClick={handleLoginToggle}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+              isLoggedIn
+                ? 'bg-red-600 hover:bg-red-700 text-white'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
+          >
+            {isLoggedIn ? 'Logout' : 'Login'}
+          </button>
+        </div>
       </div>
     </header>
   );

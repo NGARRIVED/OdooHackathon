@@ -12,6 +12,8 @@ const UserCard = ({ user }) => {
       setTimeout(() => setShowLoginModal(false), 3000);
     } else {
       console.log(`Request sent to ${user.name}`);
+      // Show success message
+      alert(`Request sent successfully to ${user.name}!`);
       // Here you would typically make an API call
     }
   };
